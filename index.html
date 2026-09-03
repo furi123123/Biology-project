@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bio-Inspired Event-Based Camera | Neuromorphic Silicon Retina Presentation & Simulator</title>
+  <meta name="description" content="A comprehensive biology project and interactive simulator exploring Event-Based Cameras (Dynamic Vision Sensors) inspired by the vertebrate retina." />
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css" />
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Three.js for 3D Spatiotemporal Event Cloud -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+
+  <!-- Top Header Navigation -->
+  <header>
+    <a href="#" class="brand-badge">
+      <div class="brand-logo-glow">
+        <i data-lucide="eye" style="color: #fff; width: 22px; height: 22px;"></i>
+      </div>
+      <div>
+        <div class="brand-title">NeuroVision · DVS</div>
+        <div class="brand-sub">Bio-Inspired Event-Based Camera</div>
+      </div>
+    </a>
+
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <span class="section-tag" style="display: none; @media(min-width: 640px){display: inline-flex;}">
+        <i data-lucide="cpu" style="width: 14px; height: 14px;"></i>
+        Silicon Retina
+      </span>
+      <a href="#working-models" class="deck-btn" style="text-decoration: none;">
+        <i data-lucide="play" style="width: 14px; height: 14px; color: var(--accent-cyan);"></i>
+        <span>Working Models</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Main Content Wrapper -->
+  <main class="main-wrapper">
+
+    <!-- ============================================
+         PRESENTATION SLIDESHOW SECTION
+         ============================================ -->
+    <section id="presentation-section">
+      <div class="section-title-wrap">
+        <div>
+          <span class="section-tag">
+            <i data-lucide="presentation" style="width: 14px; height: 14px;"></i>
+            Project Presentation Deck
+          </span>
+          <h1 class="section-heading">Bio-Inspired Neuromorphic Vision</h1>
+          <p class="section-sub">Interactive presentation deck ready for full-screen delivery or custom slide embedding.</p>
+        </div>
+        
+        <div style="display: flex; gap: 0.5rem;">
+          <button id="btn-customize-deck" class="deck-btn">
+            <i data-lucide="settings" style="width: 16px; height: 16px;"></i>
+            <span>Slide Settings / Embed</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Slide Deck Container (Fullscreen Capable) -->
+      <div id="presentation-deck" class="deck-container">
+        <!-- Progress Bar -->
+        <div class="slide-progress-container">
+          <div id="slide-progress-fill" class="slide-progress-fill"></div>
+        </div>
+
+        <!-- Slide Stage -->
+        <div id="slide-stage" class="slide-stage">
+          
+          <!-- Built-in Slide Content -->
+          <div id="slide-content" class="slide-content">
+            <span id="slide-tag" class="slide-tag">Introduction · Neuromorphic Vision</span>
+            <h2 id="slide-title" class="slide-title">Bio-Inspired Event-Based Cameras: The Silicon Retina</h2>
+            <p id="slide-subtitle" class="slide-subtitle">How vertebrate retinal neurobiology revolutionized computational vision and dynamic sensors</p>
+            
+            <ul id="slide-bullets" class="slide-bullets">
+              <li class="slide-bullet-item"><span class="bullet-icon">✦</span><span>Traditional video cameras operate on an artificial clock (30–60 frames/sec), capturing static images regardless of motion.</span></li>
+              <li class="slide-bullet-item"><span class="bullet-icon">✦</span><span>Biological eyes do not capture frames: 100+ million photoreceptors operate asynchronously, transmitting changes via action potentials.</span></li>
+              <li class="slide-bullet-item"><span class="bullet-icon">✦</span><span>Neuromorphic Event-Based Cameras (Dynamic Vision Sensors - DVS) mimic the vertebrate retina at the hardware level.</span></li>
+              <li class="slide-bullet-item"><span class="bullet-icon">✦</span><span>Each pixel has its own microscopic brain: it only transmits data when brightness changes.</span></li>
+            </ul>
+
+            <div id="slide-highlight" class="slide-highlight-card">
+              <div class="slide-highlight-title">Core Biological Principle</div>
+              <div class="slide-highlight-text">Only transmit information when something changes. Nature doesn't waste energy transmitting redundant static scenes.</div>
+            </div>
+          </div>
+
+          <!-- Embed Mode Slot (Google Slides / PPT Online / Canva / PDF) -->
+          <div id="embed-frame-wrapper" class="embed-frame-wrapper">
+            <iframe id="embed-iframe" src="" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true"></iframe>
+          </div>
+
+          <!-- Speaker Notes Drawer -->
+          <div id="speaker-notes-drawer" class="notes-drawer">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <strong style="color: var(--accent-cyan); font-size: 0.85rem; font-family: var(--font-mono);">
+                <i data-lucide="message-square" style="width: 14px; height: 14px; display: inline-block; vertical-align: middle;"></i>
+                SPEAKER NOTES & TALKING POINTS
+              </strong>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">Press 'N' to toggle</span>
+            </div>
+            <p id="speaker-notes-text" style="color: #cbd5e1; font-size: 0.95rem; line-height: 1.5;"></p>
+          </div>
+
+        </div>
+
+        <!-- Deck Controls Bar -->
+        <div class="deck-controls-bar">
+          <div class="deck-btn-group">
+            <button id="btn-prev-slide" class="deck-btn" title="Previous Slide (Left Arrow)">
+              <i data-lucide="chevron-left"></i>
+              <span>Prev</span>
+            </button>
+            <button id="btn-next-slide" class="deck-btn primary" title="Next Slide (Right Arrow or Space)">
+              <span>Next</span>
+              <i data-lucide="chevron-right"></i>
+            </button>
+            <span id="slide-indicator" class="slide-indicator">Slide 1 of 8</span>
+          </div>
+
+          <div class="deck-btn-group">
+            <button id="btn-toggle-notes" class="deck-btn" title="Toggle Speaker Notes (N)">
+              <i data-lucide="file-text"></i>
+              <span>Notes (N)</span>
+            </button>
+            <button id="btn-fullscreen" class="deck-btn" title="Toggle Fullscreen (F)">
+              <i data-lucide="maximize"></i>
+              <span>Fullscreen (F)</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide Customization / Embed Modal -->
+    <div id="deck-custom-modal" class="modal-backdrop">
+      <div class="modal-box">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+          <h3 style="color: #fff; font-size: 1.3rem;">Presentation Settings</h3>
+          <button id="btn-close-modal" class="deck-btn" style="padding: 0.3rem 0.6rem;">✕</button>
+        </div>
+
+        <p style="color: var(--text-secondary); font-size: 0.92rem; margin-bottom: 1.5rem;">
+          You can use the built-in 8-slide presentation on Bio-Inspired Event Cameras or embed your own external presentation (Google Slides, Microsoft PowerPoint Online, Canva, or PDF).
+        </p>
+
+        <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem;">
+          <label style="display: flex; align-items: center; gap: 0.75rem; color: #fff; cursor: pointer;">
+            <input type="radio" name="deck_mode" id="radio-mode-builtin" value="builtin" checked />
+            <div>
+              <strong>Built-in Presentation Deck</strong>
+              <div style="font-size: 0.82rem; color: var(--text-muted);">8 scientifically curated slides with full-screen, keyboard navigation, and speaker notes.</div>
+            </div>
+          </label>
+
+          <label style="display: flex; align-items: center; gap: 0.75rem; color: #fff; cursor: pointer;">
+            <input type="radio" name="deck_mode" id="radio-mode-embed" value="embed" />
+            <div>
+              <strong>Embed External Presentation</strong>
+              <div style="font-size: 0.82rem; color: var(--text-muted);">Paste an embed link (e.g., Google Slides published embed URL or OneDrive PPT embed).</div>
+            </div>
+          </label>
+        </div>
+
+        <div id="embed-input-section" style="display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.5rem;">
+          <label style="font-size: 0.85rem; color: var(--text-secondary);">External Slide Embed URL:</label>
+          <input 
+            type="text" 
+            id="input-embed-url" 
+            placeholder="https://docs.google.com/presentation/d/.../embed?start=false&loop=false" 
+            style="background: #0d121d; border: 1px solid var(--border-color); color: #fff; padding: 0.75rem 1rem; border-radius: 8px; outline: none; font-family: var(--font-mono); font-size: 0.85rem;"
+          />
+          <span style="font-size: 0.75rem; color: var(--text-muted);">
+            Tip: In Google Slides, go to File &gt; Share &gt; Publish to web &gt; Embed, and paste the iframe <code>src</code> URL here.
+          </span>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem;">
+          <button id="btn-save-custom" class="deck-btn primary" style="padding: 0.6rem 1.25rem;">
+            Save &amp; Apply
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================
+         INTERACTIVE WORKING MODEL SUITE SECTION
+         ============================================ -->
+    <section id="working-models">
+      <div class="section-title-wrap">
+        <div>
+          <span class="section-tag">
+            <i data-lucide="activity" style="width: 14px; height: 14px;"></i>
+            Interactive Neuromorphic Lab
+          </span>
+          <h2 class="section-heading">Event-Based Camera Working Models</h2>
+          <p class="section-sub">
+            Test live camera event extraction, compare conventional motion blur with asynchronous DVS spike streams, and explore the 3D space-time event cloud.
+          </p>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="model-tabs-nav">
+        <button class="tab-btn active" data-tab="webcam">
+          <i data-lucide="video" style="width: 18px; height: 18px;"></i>
+          <span>Live Webcam DVS Stream</span>
+        </button>
+        <button class="tab-btn" data-tab="synthetic">
+          <i data-lucide="gauge" style="width: 18px; height: 18px;"></i>
+          <span>Synthetic Biological Motion (Dual View)</span>
+        </button>
+        <button class="tab-btn" data-tab="spacetime">
+          <i data-lucide="box" style="width: 18px; height: 18px;"></i>
+          <span>3D Space-Time (x, y, t) Cloud</span>
+        </button>
+        <button class="tab-btn" data-tab="retina">
+          <i data-lucide="git-commit" style="width: 18px; height: 18px;"></i>
+          <span>Retina vs Silicon Architecture</span>
+        </button>
+      </div>
+
+      <!-- TAB 1: LIVE WEBCAM NEUROMORPHIC STREAM -->
+      <div id="panel-webcam" class="tab-content-panel active">
+        <div class="sim-grid">
+          <div class="sim-display-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+              <div style="display: flex; align-items: center; gap: 0.6rem;">
+                <span class="viewport-label-badge dvs">DVS SILICON RETINA VIEW</span>
+                <span id="webcam-status" style="font-size: 0.8rem; color: #94a3b8; font-family: var(--font-mono);">
+                  Camera Inactive
+                </span>
+              </div>
+              <div class="polarity-legend">
+                <span><span class="legend-dot on"></span>ON (+1: Brightening)</span>
+                <span><span class="legend-dot off"></span>OFF (-1: Dimming)</span>
+              </div>
+            </div>
+
+            <div class="canvas-viewport-container">
+              <canvas id="webcam-dvs-canvas"></canvas>
+            </div>
+            
+            <p style="margin-top: 0.75rem; font-size: 0.82rem; color: var(--text-muted);">
+              ✦ Microsecond-inspired differential logarithmic response: Static areas emit zero events; only motion triggers asynchronous ON/OFF spikes.
+            </p>
+          </div>
+
+          <!-- Controls Panel -->
+          <div class="sim-controls-panel">
+            <h3 style="font-size: 1.1rem; color: #fff; display: flex; align-items: center; gap: 0.5rem;">
+              <i data-lucide="sliders" style="width: 18px; height: 18px; color: var(--accent-cyan);"></i>
+              Sensor Parameters
+            </h3>
+
+            <div style="display: flex; gap: 0.5rem;">
+              <button id="btn-start-webcam" class="deck-btn primary" style="flex: 1;">
+                <i data-lucide="play" style="width: 14px; height: 14px;"></i>
+                Start Camera
+              </button>
+              <button id="btn-stop-webcam" class="deck-btn" style="flex: 1;" disabled>
+                <i data-lucide="square" style="width: 14px; height: 14px;"></i>
+                Stop
+              </button>
+            </div>
+
+            <div class="control-item">
+              <div class="control-label-row">
+                <span>Contrast Threshold (θ):</span>
+                <span id="val-webcam-threshold" class="control-val">0.18</span>
+              </div>
+              <input type="range" id="slider-webcam-threshold" min="0.05" max="0.5" step="0.01" value="0.18" />
+              <span style="font-size: 0.75rem; color: var(--text-muted);">Lower = sensitive to tiny changes | Higher = noise suppression</span>
+            </div>
+
+            <div class="control-item">
+              <div class="control-label-row">
+                <span>Event Decay Rate (τ):</span>
+                <span id="val-webcam-decay" class="control-val">0.88</span>
+              </div>
+              <input type="range" id="slider-webcam-decay" min="0.70" max="0.98" step="0.01" value="0.88" />
+              <span style="font-size: 0.75rem; color: var(--text-muted);">Simulates phosphor-like event persistence memory</span>
+            </div>
+
+            <div class="control-item">
+              <div class="control-label-row">
+                <span>Visualization Mode:</span>
+              </div>
+              <select id="select-webcam-mode" style="background: #0a0f1c; border: 1px solid var(--border-color); color: #fff; padding: 0.5rem; border-radius: 6px; outline: none;">
+                <option value="dark">Neuromorphic Dark (Pure Events)</option>
+                <option value="overlay">Grayscale Optical Blend</option>
+              </select>
+            </div>
+
+            <!-- Real-Time Metrics HUD -->
+            <div class="stats-hud">
+              <div class="stat-row">
+                <span style="color: var(--text-secondary);">Event Emission Rate:</span>
+                <span id="stat-webcam-event-rate" class="stat-number" style="color: var(--accent-cyan);">0 ev/s</span>
+              </div>
+              <div class="stat-row">
+                <span style="color: var(--text-secondary);">Sparse Bandwidth:</span>
+                <span id="stat-webcam-bandwidth" class="stat-number" style="color: var(--accent-green);">0.0 KB/s</span>
+              </div>
+              <div class="stat-row">
+                <span style="color: var(--text-secondary);">Conventional 30 FPS:</span>
+                <span class="stat-number" style="color: var(--accent-crimson);">15.5 MB/s</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 2: SYNTHETIC BIOLOGICAL MOTION (DUAL VIEW) -->
+      <div id="panel-synthetic" class="tab-content-panel">
+        <div class="sim-grid">
+          <div class="sim-display-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+              <h3 style="font-size: 1.1rem; color: #fff;">Conventional 30 FPS vs Asynchronous Event Camera</h3>
+              <div class="polarity-legend">
+                <span><span class="legend-dot on"></span>ON (+1)</span>
+                <span><span class="legend-dot off"></span>OFF (-1)</span>
+              </div>
+            </div>
+
+            <div class="canvas-viewport-container" style="aspect-ratio: auto; min-height: 340px; padding: 0.5rem;">
+              <div class="dual-viewport-grid">
+                <!-- CMOS View -->
+                <div class="sub-viewport">
+                  <span class="viewport-label-badge cmos">CONVENTIONAL CMOS (30 FPS)</span>
+                  <canvas id="sim-cmos-canvas"></canvas>
+                </div>
+                <!-- DVS View -->
+                <div class="sub-viewport">
+                  <span class="viewport-label-badge dvs">EVENT-BASED CAMERA (DVS)</span>
+                  <canvas id="sim-dvs-canvas"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; margin-top: 0.75rem; font-size: 0.82rem; color: var(--text-muted);">
+              <span>Left: Heavy exposure motion blur &amp; temporal aliasing</span>
+              <span>Right: Sharp microsecond edge events, zero motion blur</span>
+            </div>
+          </div>
+
+          <!-- Controls Panel -->
+          <div class="sim-controls-panel">
+            <h3 style="font-size: 1.1rem; color: #fff; display: flex; align-items: center; gap: 0.5rem;">
+              <i data-lucide="flask-conical" style="width: 18px; height: 18px; color: var(--accent-cyan);"></i>
+              Biological Scenarios
+            </h3>
+
+            <div class="control-item">
+              <label style="font-size: 0.85rem; color: var(--text-secondary);">Simulation Preset:</label>
+              <select id="select-sim-preset" style="background: #0a0f1c; border: 1px solid var(--border-color); color: #fff; padding: 0.6rem; border-radius: 6px; outline: none;">
+                <option value="microorganisms">Swimming Micro-Organisms (Ciliates)</option>
+                <option value="rotating_disk">High-Speed Optical Chopper (1500 RPM)</option>
+                <option value="saccades">Biological Saccadic Eye Tremor</option>
+              </select>
+            </div>
+
+            <div class="control-item">
+              <div class="control-label-row">
+                <span>Motion Velocity:</span>
+                <span id="val-sim-speed" class="control-val">1.0x</span>
+              </div>
+              <input type="range" id="slider-sim-speed" min="0.2" max="3.0" step="0.1" value="1.0" />
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; margin-top: 0.5rem;">
+              <button id="btn-toggle-sim" class="deck-btn" style="flex: 1;">Pause Simulation</button>
+              <button id="btn-reset-sim" class="deck-btn" style="flex: 1;">Reset</button>
+            </div>
+
+            <div class="slide-highlight-card" style="margin-top: 1rem;">
+              <div class="slide-highlight-title">Biological Insight</div>
+              <div style="font-size: 0.88rem; color: #cbd5e1; line-height: 1.4;">
+                Human eyes perform continuous microscopic tremors (ocular micro-saccades) at ~50–100 Hz. Without this continuous motion, stationary objects would disappear from the visual field due to retinal adaptation!
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 3: 3D SPACE-TIME (x, y, t) EVENT CLOUD -->
+      <div id="panel-spacetime" class="tab-content-panel">
+        <div class="sim-grid">
+          <div class="sim-display-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span class="viewport-label-badge dvs">SPATIOTEMPORAL VOLUME (X, Y, TIME)</span>
+              </div>
+              <div style="font-size: 0.8rem; color: var(--text-muted); font-family: var(--font-mono);">
+                Drag to Rotate 3D · Scroll to Zoom
+              </div>
+            </div>
+
+            <div id="spacetime-3d-container" class="canvas-viewport-container" style="cursor: grab;"></div>
+            
+            <p style="margin-top: 0.75rem; font-size: 0.82rem; color: var(--text-muted);">
+              ✦ The hallmark visualization of neuromorphic vision: As objects move through time, asynchronous events form continuous 3D manifolds instead of sliced 2D frames.
+            </p>
+          </div>
+
+          <!-- 3D Controls -->
+          <div class="sim-controls-panel">
+            <h3 style="font-size: 1.1rem; color: #fff; display: flex; align-items: center; gap: 0.5rem;">
+              <i data-lucide="layers" style="width: 18px; height: 18px; color: var(--accent-cyan);"></i>
+              3D Trajectory Settings
+            </h3>
+
+            <div class="control-item">
+              <label style="font-size: 0.85rem; color: var(--text-secondary);">Motion Trajectory:</label>
+              <select id="select-3d-trajectory" style="background: #0a0f1c; border: 1px solid var(--border-color); color: #fff; padding: 0.6rem; border-radius: 6px; outline: none;">
+                <option value="helix">Rotating Double Helix (Flagellar Spin)</option>
+                <option value="circle">Radial Cellular Pulsation</option>
+                <option value="random_walk">Brownian Micro-Organism Motion</option>
+              </select>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              <button id="btn-toggle-3d-rotate" class="deck-btn">Pause Auto-Rotation</button>
+              <button id="btn-clear-3d-points" class="deck-btn">Re-seed Event Stream</button>
+            </div>
+
+            <div class="slide-highlight-card" style="margin-top: 1rem;">
+              <div class="slide-highlight-title">Why 3D Space-Time?</div>
+              <div style="font-size: 0.88rem; color: #cbd5e1; line-height: 1.4;">
+                Standard video collapses time into discrete 33 ms bins. In event-based vision, time is a continuous coordinate. Algorithms fit spatio-temporal planes to extract optical flow and 3D depth directly from the event cloud!
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB 4: RETINA VS SILICON ARCHITECTURE -->
+      <div id="panel-retina" class="tab-content-panel">
+        <div class="retina-circuit-container">
+          <div style="margin-bottom: 1.5rem;">
+            <h3 style="color: #fff; font-size: 1.3rem; margin-bottom: 0.3rem;">1-to-1 Functional Equivalence: Vertebrate Eye vs DVS Pixel</h3>
+            <p style="color: var(--text-secondary); font-size: 0.95rem;">
+              Click any layer below to explore how neurobiological circuits map directly onto subthreshold analog CMOS hardware.
+            </p>
+          </div>
+
+          <div class="comparison-columns">
+            <!-- Biological Retina Column -->
+            <div>
+              <h4 style="color: #10b981; font-size: 1.05rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i data-lucide="dna" style="width: 18px; height: 18px;"></i>
+                Biological Retina (In Vivo)
+              </h4>
+              <div id="bio-layers-list" style="display: flex; flex-direction: column; gap: 1rem;">
+                <!-- Generated by bio-retina-circuit.js -->
+              </div>
+            </div>
+
+            <!-- Silicon DVS Circuit Column -->
+            <div>
+              <h4 style="color: var(--accent-cyan); font-size: 1.05rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i data-lucide="cpu" style="width: 18px; height: 18px;"></i>
+                Silicon Neuromorphic Circuit (In Silico)
+              </h4>
+              <div id="silicon-layers-list" style="display: flex; flex-direction: column; gap: 1rem;">
+                <!-- Generated by bio-retina-circuit.js -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Deep-Dive Detail Card -->
+          <div style="margin-top: 2rem; background: rgba(10, 15, 26, 0.9); border: 1px solid var(--border-glow); border-radius: var(--radius-md); padding: 1.5rem;">
+            <h4 id="deepdive-title" style="color: #fff; font-size: 1.15rem; margin-bottom: 1rem; font-family: var(--font-mono);">
+              Layer Comparative Analysis
+            </h4>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+              <div id="deepdive-bio"></div>
+              <div id="deepdive-silicon"></div>
+            </div>
+          </div>
+
+          <!-- Quantitative Comparison Table -->
+          <div style="margin-top: 2.5rem;">
+            <h4 style="color: #fff; font-size: 1.1rem; margin-bottom: 0.5rem;">Quantitative Specification Matrix</h4>
+            <table class="specs-table">
+              <thead>
+                <tr>
+                  <th>Performance Metric</th>
+                  <th>Standard CMOS Camera</th>
+                  <th>Biological Eye (Human)</th>
+                  <th>Silicon Retina (DVS)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Temporal Resolution</strong></td>
+                  <td style="color: var(--accent-crimson);">33 ms (30 FPS)</td>
+                  <td style="color: #10b981;">~10–20 ms (Synaptic)</td>
+                  <td style="color: var(--accent-cyan);">&lt; 1 μs (Microsecond)</td>
+                </tr>
+                <tr>
+                  <td><strong>Dynamic Range</strong></td>
+                  <td style="color: var(--accent-crimson);">~60 dB</td>
+                  <td style="color: #10b981;">&gt; 180 dB (Scotopic to Photopic)</td>
+                  <td style="color: var(--accent-cyan);">&gt; 120–140 dB</td>
+                </tr>
+                <tr>
+                  <td><strong>Motion Blur</strong></td>
+                  <td style="color: var(--accent-crimson);">Severe exposure blur</td>
+                  <td style="color: #10b981;">Stabilized by vestibulo-ocular reflex</td>
+                  <td style="color: var(--accent-cyan);">Completely blur-free</td>
+                </tr>
+                <tr>
+                  <td><strong>Data Transmission</strong></td>
+                  <td style="color: var(--accent-crimson);">Dense matrix (MB/s)</td>
+                  <td style="color: #10b981;">Sparse spikes via optic nerve</td>
+                  <td style="color: var(--accent-cyan);">Sparse asynchronous AER packets</td>
+                </tr>
+                <tr>
+                  <td><strong>Power Dissipation</strong></td>
+                  <td style="color: var(--accent-crimson);">1 – 5 Watts</td>
+                  <td style="color: #10b981;">~15 milliwatts (Whole Retina)</td>
+                  <td style="color: var(--accent-cyan);">5 – 50 milliwatts</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 0.75rem; align-items: center;">
+      <div style="display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap; justify-content: center;">
+        <span>✦ Bio-Inspired Computational Vision Project</span>
+        <span>✦ Neuromorphic Engineering &amp; Neurobiology</span>
+        <span>✦ Vercel Deployment Ready</span>
+      </div>
+      <p style="color: var(--text-muted); font-size: 0.82rem;">
+        Key References: Mahowald &amp; Mead (1991) "The Silicon Retina"; Lichtsteiner, Posch &amp; Delbruck (2008) "A 128x128 120dB 15μs Latency Asynchronous Temporal Contrast Vision Sensor" IEEE JSSC.
+      </p>
+    </div>
+  </footer>
+
+  <!-- Application Consolidated Script (Works on file://, local server, and Vercel) -->
+  <script src="js/bundle.js"></script>
+
+</body>
+</html>
